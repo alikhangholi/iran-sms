@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -e
+npx eslint src
+npx prettier --check "src/**/*.ts" --ignore-unknown
+npx tsc --noEmit

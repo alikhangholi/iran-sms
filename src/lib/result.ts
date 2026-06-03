@@ -1,0 +1,1 @@
+// SmsResult<T> wrapper

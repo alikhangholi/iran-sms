@@ -1,0 +1,46 @@
+# REQUIRED: Set NPM_TOKEN in GitHub repo Settings → Secrets → Actions
+# NPM_TOKEN = Automation token from npmjs.org account settings
+# Publish triggers automatically when you push a git tag: git tag v1.0.0 && git push origin v1.0.0
+
+# Design note: this workflow uses `workflow_run` instead of a `needs` + `gh api` polling job.
+# Reason: `workflow_run` is the native GitHub mechanism for cross-workflow ordering — it fires
+# only after ci.yml completes and exposes the conclusion directly, with no API rate-limit risk
+# or flakiness from manual polling. The trade-off is that publish only fires when ci.yml ran on
+# the same commit; we guard with a tag-name check so branch pushes are ignored.
+
+name: Publish
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Only publish when CI passed AND the triggering ref is a version tag (e.g. v1.2.3)
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'v')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

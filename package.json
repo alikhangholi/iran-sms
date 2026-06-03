@@ -1,0 +1,53 @@
+{
+  "name": "@alikhangholi/iran-sms",
+  "version": "0.0.0",
+  "description": "Unified TypeScript SDK for Iranian SMS panels (KavehNegar, SMS.ir, FarazSMS, Ghasedak, and more)",
+  "license": "MIT",
+  "author": "alikhangholi",
+  "keywords": ["sms", "iran", "kavenegar", "smsir", "farazsms", "ghasedak", "iranian-sms", "n8n", "typescript"],
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist", "README.md"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "npx tsup",
+    "test": "npx jest",
+    "test:watch": "npx jest --watch",
+    "test:coverage": "npx jest --coverage",
+    "lint": "npx eslint src",
+    "lint:fix": "npx eslint src --fix",
+    "format": "npx prettier --write \"src/**/*.ts\" --ignore-unknown",
+    "format:check": "npx prettier --check \"src/**/*.ts\" --ignore-unknown",
+    "typecheck": "npx tsc --noEmit",
+    "prepare": "npx husky"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.12",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.7",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.18.0",
+    "typescript-eslint": "latest",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "ts-jest": "^29.2.5",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
