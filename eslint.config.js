@@ -7,7 +7,7 @@ export default tseslint.config(
       'node_modules/**',
       'coverage/**',
       'eslint.config.js',
-      'jest.config.ts',
+      'jest.config.cjs',
       'tsup.config.ts',
       'commitlint.config.cjs',
     ],
@@ -17,7 +17,7 @@ export default tseslint.config(
     extends: [...tseslint.configs.recommendedTypeChecked],
     languageOptions: {
       parserOptions: {
-        project: true,
+        project: './tsconfig.eslint.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
