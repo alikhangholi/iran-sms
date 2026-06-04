@@ -12,7 +12,7 @@ import type {
 export abstract class SmsProvider {
   protected constructor(
     protected readonly http: HttpClient,
-    protected readonly providerName: SmsProviderName,
+    readonly providerName: SmsProviderName,
     protected readonly defaultLineNumber: string,
   ) {}
 
