@@ -32,7 +32,7 @@ describe('send — single recipient', () => {
       expect(result.provider).toBe('kavenegar');
       expect(result.status).toBe('queued');
     }
-    expect(mockHttp.request).toHaveBeenCalledTimes(1);
+    expect(mockHttp.request.mock.calls).toHaveLength(1);
     expect((mockHttp.request.mock.calls[0]?.[0] as { url: string }).url).toContain('sms/send.json');
   });
 });
@@ -93,12 +93,9 @@ describe('getCredit', () => {
 describe('error handling', () => {
   it('wraps network error as IranSmsError with NETWORK_ERROR', async () => {
     mockHttp.request.mockRejectedValueOnce(new Error('connection refused'));
-    await expect(provider.send({ to: '09121234567', message: 'test' })).rejects.toBeInstanceOf(IranSmsError);
-    await expect(
-      provider.send({ to: '09121234567', message: 'test' }).catch((e: unknown) =>
-        Promise.reject(e instanceof IranSmsError ? e.code : 'not-iran-error'),
-      ),
-    ).rejects.toBe('NETWORK_ERROR');
+    const error = await provider.send({ to: '09121234567', message: 'test' }).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(IranSmsError);
+    expect((error as IranSmsError).code).toBe('NETWORK_ERROR');
   });
 
   it('throws IranSmsError PROVIDER_ERROR when API return.status !== 200', async () => {

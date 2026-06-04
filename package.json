@@ -1,13 +1,17 @@
 {
   "name": "@alikhangholi/iran-sms",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Unified TypeScript SDK for Iranian SMS panels (KavehNegar, SMS.ir, FarazSMS, Ghasedak, and more)",
   "license": "MIT",
   "author": "alikhangholi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alikhangholi/iran-sms.git"
+  },
   "keywords": ["sms", "iran", "kavenegar", "smsir", "farazsms", "ghasedak", "iranian-sms", "n8n", "typescript"],
   "type": "module",
   "sideEffects": false,
-  "files": ["dist", "README.md"],
+  "files": ["dist/*.js", "dist/*.cjs", "dist/*.d.ts", "dist/*.d.cts", "README.md", "CHANGELOG.md"],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
