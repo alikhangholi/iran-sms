@@ -27,6 +27,10 @@ export class IranSmsError extends Error {
     if (error instanceof Error) {
       return new IranSmsError({ message: error.message, code: 'NETWORK_ERROR', provider });
     }
-    return new IranSmsError({ message: 'An unknown error occurred', code: 'UNKNOWN_ERROR', provider });
+    return new IranSmsError({
+      message: 'An unknown error occurred',
+      code: 'UNKNOWN_ERROR',
+      provider,
+    });
   }
 }

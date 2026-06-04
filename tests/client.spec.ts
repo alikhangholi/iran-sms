@@ -27,17 +27,23 @@ function injectAdapter(sms: IranSms, adapter: MockAdapter): void {
 describe('IranSms — provider instantiation', () => {
   it.each([
     ['kavenegar', { provider: 'kavenegar' as const, apiKey: 'k', lineNumber: '100' }],
-    ['smsir',     { provider: 'smsir'     as const, apiKey: 'k', lineNumber: 100 }],
-    ['farazsms',  { provider: 'farazsms'  as const, username: 'u', password: 'p', lineNumber: '100' }],
-    ['ghasedak',  { provider: 'ghasedak'  as const, apiKey: 'k', lineNumber: '100' }],
+    ['smsir', { provider: 'smsir' as const, apiKey: 'k', lineNumber: 100 }],
+    [
+      'farazsms',
+      { provider: 'farazsms' as const, username: 'u', password: 'p', lineNumber: '100' },
+    ],
+    ['ghasedak', { provider: 'ghasedak' as const, apiKey: 'k', lineNumber: '100' }],
   ])('instantiates %s and getProvider() returns correct name', (name, providerConfig) => {
     const sms = new IranSms({ provider: providerConfig });
     expect(sms.getProvider()).toBe(name);
   });
 
   it.each([
-    ['melipayamak', { provider: 'melipayamak' as const, username: 'u', password: 'p', lineNumber: '100' }],
-    ['ippanel',     { provider: 'ippanel'     as const, username: 'u', password: 'p', lineNumber: '100' }],
+    [
+      'melipayamak',
+      { provider: 'melipayamak' as const, username: 'u', password: 'p', lineNumber: '100' },
+    ],
+    ['ippanel', { provider: 'ippanel' as const, username: 'u', password: 'p', lineNumber: '100' }],
   ])('throws NOT_IMPLEMENTED for unimplemented provider %s', (_name, providerConfig) => {
     const config: IranSmsConfig = { provider: providerConfig };
     expect(() => new IranSms(config)).toThrow(IranSmsError);
@@ -52,7 +58,10 @@ describe('IranSms — provider instantiation', () => {
 });
 
 describe('IranSms — safe mode', () => {
-  const baseConfig: IranSmsConfig = { provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' }, safe: true };
+  const baseConfig: IranSmsConfig = {
+    provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' },
+    safe: true,
+  };
   const sendParams = { to: '09121234567', message: 'hi' };
 
   it('safe: true + rejection → success: false with NETWORK_ERROR', async () => {
@@ -70,7 +79,12 @@ describe('IranSms — safe mode', () => {
   it('safe: true + resolve → success: true with data', async () => {
     const sms = new IranSms(baseConfig);
     const adapter = makeMockAdapter();
-    const sendResult: SendResult = { messageId: 1, provider: 'kavenegar', status: 'queued', rawResponse: null };
+    const sendResult: SendResult = {
+      messageId: 1,
+      provider: 'kavenegar',
+      status: 'queued',
+      rawResponse: null,
+    };
     adapter.send.mockResolvedValueOnce(sendResult);
     injectAdapter(sms, adapter);
     const result = await sms.send(sendParams);
@@ -78,9 +92,13 @@ describe('IranSms — safe mode', () => {
   });
 
   it('safe: false (default) + rejection → throws IranSmsError', async () => {
-    const sms = new IranSms({ provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' } });
+    const sms = new IranSms({
+      provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' },
+    });
     const adapter = makeMockAdapter();
-    adapter.send.mockRejectedValueOnce(new IranSmsError({ message: 'fail', code: 'PROVIDER_ERROR', provider: 'kavenegar' }));
+    adapter.send.mockRejectedValueOnce(
+      new IranSmsError({ message: 'fail', code: 'PROVIDER_ERROR', provider: 'kavenegar' }),
+    );
     injectAdapter(sms, adapter);
     await expect(sms.send(sendParams)).rejects.toThrow(IranSmsError);
   });
@@ -88,15 +106,23 @@ describe('IranSms — safe mode', () => {
 
 describe('IranSms — default config values', () => {
   it('timeout defaults — construction without timeout does not crash', () => {
-    const sms = new IranSms({ provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' } });
+    const sms = new IranSms({
+      provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' },
+    });
     expect(sms.getProvider()).toBe('kavenegar');
   });
 
   it('safe defaults to false — injected rejecting adapter causes method to throw', async () => {
-    const sms = new IranSms({ provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' } });
+    const sms = new IranSms({
+      provider: { provider: 'kavenegar', apiKey: 'x', lineNumber: '100' },
+    });
     const adapter = makeMockAdapter();
-    adapter.send.mockRejectedValueOnce(new IranSmsError({ message: 'fail', code: 'TIMEOUT', provider: 'kavenegar' }));
+    adapter.send.mockRejectedValueOnce(
+      new IranSmsError({ message: 'fail', code: 'TIMEOUT', provider: 'kavenegar' }),
+    );
     injectAdapter(sms, adapter);
-    await expect(sms.send({ to: '09121234567', message: 'hi' })).rejects.toBeInstanceOf(IranSmsError);
+    await expect(sms.send({ to: '09121234567', message: 'hi' })).rejects.toBeInstanceOf(
+      IranSmsError,
+    );
   });
 });

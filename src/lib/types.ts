@@ -80,6 +80,4 @@ export type CreditResult = {
   rawResponse: unknown;
 };
 
-export type SmsResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: IranSmsError };
+export type SmsResult<T> = { success: true; data: T } | { success: false; error: IranSmsError };

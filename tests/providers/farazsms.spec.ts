@@ -3,7 +3,12 @@ import { IranSmsError } from '../../src/lib/error.js';
 import { createMockHttpClient, mockSuccess } from '../helpers/mock-http.js';
 import type { FarazSmsConfig } from '../../src/lib/types.js';
 
-const config: FarazSmsConfig = { provider: 'farazsms', username: 'user', password: 'pass', lineNumber: '3000' };
+const config: FarazSmsConfig = {
+  provider: 'farazsms',
+  username: 'user',
+  password: 'pass',
+  lineNumber: '3000',
+};
 
 type WithHttp = { http: ReturnType<typeof createMockHttpClient> };
 
@@ -18,9 +23,7 @@ beforeEach(() => {
 
 describe('send — single recipient', () => {
   it('returns single SendResult with correct body', async () => {
-    mockHttp.request.mockResolvedValueOnce(
-      mockSuccess({ status: 'success', data: ['msg-id-1'] }),
-    );
+    mockHttp.request.mockResolvedValueOnce(mockSuccess({ status: 'success', data: ['msg-id-1'] }));
     const result = await provider.send({ to: '09121234567', message: 'test' });
     expect(Array.isArray(result)).toBe(false);
     if (!Array.isArray(result)) expect(result.messageId).toBe('msg-id-1');
@@ -43,10 +46,12 @@ describe('send — bulk recipients', () => {
 
 describe('sendPattern', () => {
   it('posts with method pattern, pattern_code, and input_data as single-key objects', async () => {
-    mockHttp.request.mockResolvedValueOnce(
-      mockSuccess({ status: 'success', data: ['pid-1'] }),
-    );
-    await provider.sendPattern({ to: '09121234567', templateId: 'tpl-99', variables: { name: 'Ali', code: '1234' } });
+    mockHttp.request.mockResolvedValueOnce(mockSuccess({ status: 'success', data: ['pid-1'] }));
+    await provider.sendPattern({
+      to: '09121234567',
+      templateId: 'tpl-99',
+      variables: { name: 'Ali', code: '1234' },
+    });
     const body = (mockHttp.request.mock.calls[0]?.[0] as { body: Record<string, unknown> }).body;
     expect(body['method']).toBe('pattern');
     expect(body['pattern_code']).toBe('tpl-99');
@@ -58,11 +63,11 @@ describe('sendPattern', () => {
 
 describe('getStatus', () => {
   const cases: [string, string][] = [
-    ['delivered',   'delivered'],
-    ['failed',      'failed'],
+    ['delivered', 'delivered'],
+    ['failed', 'failed'],
     ['undelivered', 'failed'],
-    ['pending',     'pending'],
-    ['queued',      'pending'],
+    ['pending', 'pending'],
+    ['queued', 'pending'],
     ['unknown-xyz', 'unknown'],
   ];
 
@@ -91,7 +96,9 @@ describe('error handling', () => {
     mockHttp.request.mockResolvedValueOnce(
       mockSuccess({ status: 'error', error_code: 'AUTH_FAILED' }),
     );
-    const error = await provider.send({ to: '09121234567', message: 'test' }).catch((e: unknown) => e);
+    const error = await provider
+      .send({ to: '09121234567', message: 'test' })
+      .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(IranSmsError);
     expect((error as IranSmsError).code).toBe('PROVIDER_ERROR');
   });

@@ -22,9 +22,7 @@ export abstract class SmsProvider {
   abstract getCredit(): Promise<CreditResult>;
 
   protected resolveLineNumber(override?: string): string {
-    return override !== undefined && override.length > 0
-      ? override
-      : this.defaultLineNumber;
+    return override !== undefined && override.length > 0 ? override : this.defaultLineNumber;
   }
 
   protected toSendResult(params: {

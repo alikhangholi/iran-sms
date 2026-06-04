@@ -47,7 +47,7 @@ export class SmsIrProvider extends SmsProvider {
   async send(params: SendParams): Promise<SendResult | SendResult[]> {
     try {
       const toArr = typeof params.to === 'string' ? [params.to] : params.to;
-      const mobiles = toArr.map(n => normalizePhone(n).withoutZero);
+      const mobiles = toArr.map((n) => normalizePhone(n).withoutZero);
       const sendDateTime = params.sendAt !== undefined ? params.sendAt.toISOString() : null;
 
       const res = await this.http.request<SmsIrEnvelope<SmsIrSentItem[]>>({
@@ -64,11 +64,14 @@ export class SmsIrProvider extends SmsProvider {
       });
       assertApiSuccess(res.data);
 
-      const results = res.data.data.map(item =>
+      const results = res.data.data.map((item) =>
         this.toSendResult({ messageId: item.messageId, status: 'queued', rawResponse: res.data }),
       );
 
-      return typeof params.to === 'string' ? (results[0] ?? this.toSendResult({ messageId: '', status: 'queued', rawResponse: res.data })) : results;
+      return typeof params.to === 'string'
+        ? (results[0] ??
+            this.toSendResult({ messageId: '', status: 'queued', rawResponse: res.data }))
+        : results;
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
       throw IranSmsError.from(error, 'smsir');
@@ -89,7 +92,11 @@ export class SmsIrProvider extends SmsProvider {
       });
       assertApiSuccess(res.data);
 
-      return this.toSendResult({ messageId: res.data.data.messageId, status: 'queued', rawResponse: res.data });
+      return this.toSendResult({
+        messageId: res.data.data.messageId,
+        status: 'queued',
+        rawResponse: res.data,
+      });
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
       throw IranSmsError.from(error, 'smsir');

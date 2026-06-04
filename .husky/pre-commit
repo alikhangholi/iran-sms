@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 set -e
-npx eslint src tests
-npx prettier --check "src/**/*.ts" "tests/**/*.ts" --ignore-unknown
-npx tsc --noEmit
+eslint src tests
+prettier --check "src/**/*.ts" "tests/**/*.ts" --ignore-unknown
+tsc --noEmit

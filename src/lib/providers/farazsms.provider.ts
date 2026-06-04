@@ -55,23 +55,32 @@ export class FarazSmsProvider extends SmsProvider {
       const lineNumber = this.resolveLineNumber(params.lineNumber);
       const isSingle = typeof params.to === 'string';
       const toArr: string[] = typeof params.to === 'string' ? [params.to] : params.to;
-      const normalized = normalizePhonesArray(toArr).map(p => p.withCountryCode);
+      const normalized = normalizePhonesArray(toArr).map((p) => p.withCountryCode);
 
       const res = await this.http.request<FarazResponse<string[]>>({
         method: 'POST',
         url: BASE,
         provider: 'farazsms',
-        body: { ...this.authBody(), method: 'sms', from: lineNumber, to: normalized, message: params.message },
+        body: {
+          ...this.authBody(),
+          method: 'sms',
+          from: lineNumber,
+          to: normalized,
+          message: params.message,
+        },
       });
       assertSuccess(res.data);
 
       const ids = res.data.data ?? [];
-      const results = ids.map(id =>
+      const results = ids.map((id) =>
         this.toSendResult({ messageId: id, status: 'queued', rawResponse: res.data }),
       );
 
       if (isSingle) {
-        return results[0] ?? this.toSendResult({ messageId: '', status: 'queued', rawResponse: res.data });
+        return (
+          results[0] ??
+          this.toSendResult({ messageId: '', status: 'queued', rawResponse: res.data })
+        );
       }
       return results;
     } catch (error: unknown) {
@@ -90,7 +99,14 @@ export class FarazSmsProvider extends SmsProvider {
         method: 'POST',
         url: BASE,
         provider: 'farazsms',
-        body: { ...this.authBody(), method: 'pattern', from: lineNumber, to, pattern_code: params.templateId, input_data },
+        body: {
+          ...this.authBody(),
+          method: 'pattern',
+          from: lineNumber,
+          to,
+          pattern_code: params.templateId,
+          input_data,
+        },
       });
       assertSuccess(res.data);
 

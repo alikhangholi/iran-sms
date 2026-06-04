@@ -53,9 +53,7 @@ export class KavenegarProvider extends SmsProvider {
     try {
       const lineNumber = this.resolveLineNumber(params.lineNumber);
       const dateField =
-        params.sendAt !== undefined
-          ? { date: Math.floor(params.sendAt.getTime() / 1000) }
-          : {};
+        params.sendAt !== undefined ? { date: Math.floor(params.sendAt.getTime() / 1000) } : {};
 
       if (typeof params.to === 'string') {
         const receptor = normalizePhone(params.to).withoutZero;
@@ -67,11 +65,21 @@ export class KavenegarProvider extends SmsProvider {
         });
         assertApiSuccess(res.data.return, res.data);
         const entry = res.data.entries[0];
-        if (entry === undefined) throw new IranSmsError({ message: 'Empty entries', code: 'PROVIDER_ERROR', provider: 'kavenegar', rawResponse: res.data });
-        return this.toSendResult({ messageId: entry.messageid, status: mapEntryStatus(entry.status), rawResponse: res.data });
+        if (entry === undefined)
+          throw new IranSmsError({
+            message: 'Empty entries',
+            code: 'PROVIDER_ERROR',
+            provider: 'kavenegar',
+            rawResponse: res.data,
+          });
+        return this.toSendResult({
+          messageId: entry.messageid,
+          status: mapEntryStatus(entry.status),
+          rawResponse: res.data,
+        });
       }
 
-      const receptors = params.to.map(n => normalizePhone(n).withoutZero);
+      const receptors = params.to.map((n) => normalizePhone(n).withoutZero);
       const res = await this.http.request<KavenegarResponse<KavenegarEntry[]>>({
         method: 'POST',
         url: this.baseUrl + 'sms/sendarray.json',
@@ -84,8 +92,12 @@ export class KavenegarProvider extends SmsProvider {
         },
       });
       assertApiSuccess(res.data.return, res.data);
-      return res.data.entries.map(e =>
-        this.toSendResult({ messageId: e.messageid, status: mapEntryStatus(e.status), rawResponse: res.data }),
+      return res.data.entries.map((e) =>
+        this.toSendResult({
+          messageId: e.messageid,
+          status: mapEntryStatus(e.status),
+          rawResponse: res.data,
+        }),
       );
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
@@ -113,8 +125,18 @@ export class KavenegarProvider extends SmsProvider {
       });
       assertApiSuccess(res.data.return, res.data);
       const entry = res.data.entries[0];
-      if (entry === undefined) throw new IranSmsError({ message: 'Empty entries', code: 'PROVIDER_ERROR', provider: 'kavenegar', rawResponse: res.data });
-      return this.toSendResult({ messageId: entry.messageid, status: mapEntryStatus(entry.status), rawResponse: res.data });
+      if (entry === undefined)
+        throw new IranSmsError({
+          message: 'Empty entries',
+          code: 'PROVIDER_ERROR',
+          provider: 'kavenegar',
+          rawResponse: res.data,
+        });
+      return this.toSendResult({
+        messageId: entry.messageid,
+        status: mapEntryStatus(entry.status),
+        rawResponse: res.data,
+      });
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
       throw IranSmsError.from(error, 'kavenegar');
@@ -131,7 +153,13 @@ export class KavenegarProvider extends SmsProvider {
       });
       assertApiSuccess(res.data.return, res.data);
       const entry = res.data.entries[0];
-      if (entry === undefined) throw new IranSmsError({ message: 'Empty entries', code: 'PROVIDER_ERROR', provider: 'kavenegar', rawResponse: res.data });
+      if (entry === undefined)
+        throw new IranSmsError({
+          message: 'Empty entries',
+          code: 'PROVIDER_ERROR',
+          provider: 'kavenegar',
+          rawResponse: res.data,
+        });
       return {
         messageId: entry.messageid,
         status: mapDeliveryStatus(entry.status),

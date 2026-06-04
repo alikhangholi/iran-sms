@@ -31,7 +31,13 @@ describe('send — single recipient', () => {
 describe('send — bulk recipients', () => {
   it('returns array of SendResults, calls SendBulkSMS', async () => {
     mockHttp.request.mockResolvedValueOnce(
-      mockSuccess({ result: { code: 200, description: 'ok' }, items: [{ id: '1', status: 1 }, { id: '2', status: 1 }] }),
+      mockSuccess({
+        result: { code: 200, description: 'ok' },
+        items: [
+          { id: '1', status: 1 },
+          { id: '2', status: 1 },
+        ],
+      }),
     );
     const result = await provider.send({ to: ['09121234567', '09361234567'], message: 'bulk' });
     expect(Array.isArray(result)).toBe(true);
@@ -45,7 +51,11 @@ describe('sendPattern', () => {
     mockHttp.request.mockResolvedValueOnce(
       mockSuccess({ result: { code: 200, description: 'ok' }, items: [{ id: '444', status: 1 }] }),
     );
-    const result = await provider.sendPattern({ to: '09121234567', templateId: 'otp', variables: { code: '5678' } });
+    const result = await provider.sendPattern({
+      to: '09121234567',
+      templateId: 'otp',
+      variables: { code: '5678' },
+    });
     expect(result.messageId).toBe('444');
     const body = (mockHttp.request.mock.calls[0]?.[0] as { body: Record<string, unknown> }).body;
     expect(body['type']).toBe(1);
@@ -86,7 +96,9 @@ describe('error handling', () => {
     mockHttp.request.mockResolvedValueOnce(
       mockSuccess({ result: { code: 401, description: 'Unauthorized' }, items: [] }),
     );
-    const error = await provider.send({ to: '09121234567', message: 'test' }).catch((e: unknown) => e);
+    const error = await provider
+      .send({ to: '09121234567', message: 'test' })
+      .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(IranSmsError);
     expect((error as IranSmsError).code).toBe('PROVIDER_ERROR');
   });

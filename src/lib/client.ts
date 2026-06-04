@@ -31,10 +31,14 @@ export class IranSms {
 
   private static createAdapter(providerConfig: ProviderConfig, timeout: number): SmsProvider {
     switch (providerConfig.provider) {
-      case 'kavenegar': return new KavenegarProvider(providerConfig, timeout);
-      case 'smsir':     return new SmsIrProvider(providerConfig, timeout);
-      case 'farazsms':  return new FarazSmsProvider(providerConfig, timeout);
-      case 'ghasedak':  return new GhasedakProvider(providerConfig, timeout);
+      case 'kavenegar':
+        return new KavenegarProvider(providerConfig, timeout);
+      case 'smsir':
+        return new SmsIrProvider(providerConfig, timeout);
+      case 'farazsms':
+        return new FarazSmsProvider(providerConfig, timeout);
+      case 'ghasedak':
+        return new GhasedakProvider(providerConfig, timeout);
       default: {
         const p = providerConfig as ProviderConfig;
         throw new IranSmsError({
@@ -50,7 +54,9 @@ export class IranSms {
     return this.adapter.providerName;
   }
 
-  async send(params: SendParams): Promise<SendResult | SendResult[] | SmsResult<SendResult | SendResult[]>> {
+  async send(
+    params: SendParams,
+  ): Promise<SendResult | SendResult[] | SmsResult<SendResult | SendResult[]>> {
     if (!this.safe) return this.adapter.send(params);
     return fromPromise(this.adapter.send(params), this.getProvider());
   }

@@ -47,9 +47,16 @@ describe('sendPattern', () => {
     mockHttp.request.mockResolvedValueOnce(
       mockSuccess({ status: 1, message: 'ok', data: { messageId: 222 } }),
     );
-    const result = await provider.sendPattern({ to: '09121234567', templateId: '42', variables: { code: '9999' } });
+    const result = await provider.sendPattern({
+      to: '09121234567',
+      templateId: '42',
+      variables: { code: '9999' },
+    });
     expect(result.messageId).toBe(222);
-    const call = mockHttp.request.mock.calls[0]?.[0] as { url: string; body: Record<string, unknown> };
+    const call = mockHttp.request.mock.calls[0]?.[0] as {
+      url: string;
+      body: Record<string, unknown>;
+    };
     expect(call.url).toContain('send/verify');
     expect(Array.isArray(call.body['parameters'])).toBe(true);
   });
@@ -74,9 +81,7 @@ describe('getStatus', () => {
 
 describe('getCredit', () => {
   it('returns balance in rial', async () => {
-    mockHttp.request.mockResolvedValueOnce(
-      mockSuccess({ status: 1, message: 'ok', data: 75000 }),
-    );
+    mockHttp.request.mockResolvedValueOnce(mockSuccess({ status: 1, message: 'ok', data: 75000 }));
     const result = await provider.getCredit();
     expect(result.balance).toBe(75000);
     expect(result.unit).toBe('rial');
@@ -88,7 +93,9 @@ describe('error handling', () => {
     mockHttp.request.mockResolvedValueOnce(
       mockSuccess({ status: 0, message: 'Invalid API key', data: null }),
     );
-    const error = await provider.send({ to: '09121234567', message: 'test' }).catch((e: unknown) => e);
+    const error = await provider
+      .send({ to: '09121234567', message: 'test' })
+      .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(IranSmsError);
     expect((error as IranSmsError).code).toBe('PROVIDER_ERROR');
   });

@@ -70,11 +70,21 @@ export class GhasedakProvider extends SmsProvider {
         });
         assertSuccess(res.data);
         const item = res.data.items?.[0];
-        if (item === undefined) throw new IranSmsError({ message: 'Empty items', code: 'PROVIDER_ERROR', provider: 'ghasedak', rawResponse: res.data });
-        return this.toSendResult({ messageId: item.id, status: mapSentStatus(item.status), rawResponse: res.data });
+        if (item === undefined)
+          throw new IranSmsError({
+            message: 'Empty items',
+            code: 'PROVIDER_ERROR',
+            provider: 'ghasedak',
+            rawResponse: res.data,
+          });
+        return this.toSendResult({
+          messageId: item.id,
+          status: mapSentStatus(item.status),
+          rawResponse: res.data,
+        });
       }
 
-      const receptors = normalizePhonesArray(params.to as string[]).map(p => p.withoutZero);
+      const receptors = normalizePhonesArray(params.to as string[]).map((p) => p.withoutZero);
       const body: Record<string, unknown> = { lineNumber, receptors, message: params.message };
       if (sendDate !== undefined) body['sendDate'] = sendDate;
 
@@ -86,8 +96,12 @@ export class GhasedakProvider extends SmsProvider {
         body,
       });
       assertSuccess(res.data);
-      return (res.data.items ?? []).map(item =>
-        this.toSendResult({ messageId: item.id, status: mapSentStatus(item.status), rawResponse: res.data }),
+      return (res.data.items ?? []).map((item) =>
+        this.toSendResult({
+          messageId: item.id,
+          status: mapSentStatus(item.status),
+          rawResponse: res.data,
+        }),
       );
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
@@ -113,8 +127,18 @@ export class GhasedakProvider extends SmsProvider {
       });
       assertSuccess(res.data);
       const item = res.data.items?.[0];
-      if (item === undefined) throw new IranSmsError({ message: 'Empty items', code: 'PROVIDER_ERROR', provider: 'ghasedak', rawResponse: res.data });
-      return this.toSendResult({ messageId: item.id, status: mapSentStatus(item.status), rawResponse: res.data });
+      if (item === undefined)
+        throw new IranSmsError({
+          message: 'Empty items',
+          code: 'PROVIDER_ERROR',
+          provider: 'ghasedak',
+          rawResponse: res.data,
+        });
+      return this.toSendResult({
+        messageId: item.id,
+        status: mapSentStatus(item.status),
+        rawResponse: res.data,
+      });
     } catch (error: unknown) {
       if (error instanceof IranSmsError) throw error;
       throw IranSmsError.from(error, 'ghasedak');

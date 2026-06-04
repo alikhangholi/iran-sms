@@ -3,7 +3,11 @@ import { ok, err, fromPromise } from '../src/lib/result.js';
 
 describe('IranSmsError', () => {
   it('constructs with correct properties', () => {
-    const e = new IranSmsError({ message: 'bad key', code: 'INVALID_API_KEY', provider: 'kavenegar' });
+    const e = new IranSmsError({
+      message: 'bad key',
+      code: 'INVALID_API_KEY',
+      provider: 'kavenegar',
+    });
     expect(e.message).toBe('bad key');
     expect(e.code).toBe('INVALID_API_KEY');
     expect(e.provider).toBe('kavenegar');
@@ -22,7 +26,13 @@ describe('IranSmsError', () => {
 
   it('sets optional statusCode and rawResponse', () => {
     const raw = { detail: 'bad' };
-    const e = new IranSmsError({ message: 'x', code: 'PROVIDER_ERROR', provider: 'kavenegar', statusCode: 401, rawResponse: raw });
+    const e = new IranSmsError({
+      message: 'x',
+      code: 'PROVIDER_ERROR',
+      provider: 'kavenegar',
+      statusCode: 401,
+      rawResponse: raw,
+    });
     expect(e.statusCode).toBe(401);
     expect(e.rawResponse).toBe(raw);
   });
