@@ -32,7 +32,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-unknown",
     "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" --ignore-unknown",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "node -e \"if (process.env.CI) process.exit(0)\" || husky"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
