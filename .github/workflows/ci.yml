@@ -27,6 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm install --foreground-scripts
         timeout-minutes: 10
+      - name: Add node_modules/.bin to PATH
+        run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> $GITHUB_PATH
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
