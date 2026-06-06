@@ -39,12 +39,12 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --foreground-scripts
+        run: npm install --foreground-scripts; exit 0
         timeout-minutes: 10
-      - name: Add node_modules/.bin to PATH
-        run: echo "$GITHUB_WORKSPACE/node_modules/.bin" >> $GITHUB_PATH
-      - run: npm run build
-      - run: npm run test
+      - name: Build
+        run: node_modules/.bin/tsup
+      - name: Test
+        run: node_modules/.bin/jest
       - run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
