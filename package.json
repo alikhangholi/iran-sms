@@ -1,6 +1,6 @@
 {
   "name": "@alikhangholi/iran-sms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unified TypeScript SDK for Iranian SMS panels (KavehNegar, SMS.ir, FarazSMS, Ghasedak, and more)",
   "license": "MIT",
   "author": "alikhangholi",
