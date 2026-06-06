@@ -38,8 +38,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
 
-      - run: npm ci --ignore-scripts
-        timeout-minutes: 3
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+        timeout-minutes: 10
       - run: npm run build
       - run: npm run test
       - run: npm publish --access public --provenance

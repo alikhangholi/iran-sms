@@ -23,10 +23,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: package-lock.json
 
-      - run: npm ci --ignore-scripts
-        timeout-minutes: 3
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+        timeout-minutes: 10
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
